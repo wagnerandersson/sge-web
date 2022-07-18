@@ -226,7 +226,7 @@ const ReportDailyBilling = () => {
 
 
   return (
-    <div className="container">
+    <div className="container col-sm-12">
       <div className="tollbar mt-1">
         <h2>Relatórios</h2>
       </div>
@@ -234,20 +234,20 @@ const ReportDailyBilling = () => {
 
       <div className="buttons mt-5 col-sm-12">
         <button 
-        className="button-form mr-2 rounded btn-sm" 
+        className="button-form mr-2 rounded col-sm-2" 
         type="submit" 
         onClick={() => {renderPG("OccupationChart")}}>
           Ocupação Diária
         </button>        
           <button 
-          className="button-form mr-2 rounded btn-sm" 
+          className="button-form mr-2 rounded col-sm-2" 
           type="submit"
           onClick={() => {setChart("dailyBilling")}}
           >
             Faturamento Diário
           </button>
         <button 
-        className="button-form mr-2 rounded btn-sm" 
+        className="button-form mr-2 rounded col-sm-2" 
         type="submit"
         onClick={() => {setChart("NonPayment")}}
         >
