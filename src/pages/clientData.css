@@ -1,0 +1,11 @@
+.client-form {
+  align-items: center;
+  text-align: center;
+  display: -moz-grid-group;
+  height: 100%;
+}
+
+.form {
+  display: column;
+  justify-content: center;
+}

@@ -1,0 +1,7 @@
+.col-sm-12 {
+  max-height: 150,
+}
+
+tr:hover {
+  background-color: rgb(221, 254, 255);
+}
