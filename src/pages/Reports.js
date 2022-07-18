@@ -246,14 +246,14 @@ console.log("dias ", allDays)
         className="button-form mr-2 rounded col-sm-3" 
         type="submit" 
         onClick={() => {setChart("OccupationChart")}}>
-          Ocupação Diária
+          Ocupação
         </button>        
           <button 
           className="button-form mr-2 rounded col-sm-3" 
           type="submit"
           onClick={() => {renderPG("dailyBilling")}}
           >
-            Faturamento Diário
+            Faturamento
           </button>
         <button 
         className="button-form mr-2 rounded col-sm-3" 

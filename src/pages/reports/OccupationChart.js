@@ -237,14 +237,14 @@ const ReportDailyBilling = () => {
         className="button-form mr-2 rounded col-sm-3" 
         type="submit" 
         onClick={() => {renderPG("OccupationChart")}}>
-          Ocupação Diária
+          Ocupação
         </button>        
           <button 
           className="button-form mr-2 rounded col-sm-3" 
           type="submit"
           onClick={() => {setChart("dailyBilling")}}
           >
-            Faturamento Diário
+            Faturamento
           </button>
         <button 
         className="button-form mr-2 rounded col-sm-3" 
