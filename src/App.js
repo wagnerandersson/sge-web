@@ -24,8 +24,8 @@ const App = () => {
         <Switch>
           <Route path="/" exact component={Login} />
           <MenuProvider>
-            <Route path="/clientdata/" component={ClientAdd} />
             <Route path="/menu" component={Menu} />
+            {/* <Route path="/clientdata/" component={ClientAdd} /> */}
             {/* <Route path="/start" component={Start} /> */}
           </MenuProvider>
         </Switch>

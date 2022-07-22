@@ -47,7 +47,7 @@ const printCupom = async(data, event) => {
     return qz.websocket.disconnect();
 }).then(() => {
     // process.exit(0);
-    window.location.reload()
+    // window.location.reload()
 }).catch((err) => {
     console.error(err);
     // process.exit(1);
