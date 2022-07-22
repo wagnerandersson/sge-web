@@ -12,6 +12,7 @@ import {
 import { useState } from "react";
 // import logo from "../assets/iconSmall.png";
 import "./Menu.css";
+import { Link } from "react-router-dom"
 
 import { useMenu } from "../context/MenuContext";
 
@@ -48,10 +49,16 @@ const SideMenu = ({ navigation }) => {
       reports: Reports(),
       dailyBilling: ReportsDailyBilling(),
       boxForm: BoxForm(),
-      boxScreen: BoxScreen(),
+      boxScreen: BoxScreen()
     };
     return type[state] || StartScreen();
   };
+
+  // const extiFunction = (state) => {
+  //   if (state === "exit") {
+  //     <Login />
+  //   }
+  // }
 
   useEffect(() => {
     renderPG();
@@ -124,7 +131,8 @@ const SideMenu = ({ navigation }) => {
               Configurações
             </Menu.Item>
             <Menu.Item key="11" icon={<LogoutOutlined />}>
-              Sair
+              <Link to="/">Sair</Link>
+              
             </Menu.Item>
           </Menu>
         </Sider>

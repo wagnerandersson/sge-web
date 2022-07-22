@@ -239,9 +239,9 @@ console.log("dias ", allDays)
       <div className="tollbar mt-1">
         <h2>Relatórios</h2>
       </div>
-      <div className="row-fluid col-sm-12">
+      <div className="row">
 
-      {/* <div className="buttons mt-5 col-sm-12"> */}
+      <div className="buttons mt-5 col-sm-12">
         <button 
         className="button-form mr-2 rounded col-sm-3" 
         type="submit" 
@@ -262,7 +262,7 @@ console.log("dias ", allDays)
         >
           Inadimplência
         </button>        
-          {/* </div> */}
+          </div>
       </div>
 
         <div className="mt-5 mb-5">

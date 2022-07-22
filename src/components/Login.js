@@ -27,6 +27,16 @@ const Login = () => {
   const [password, setPassword] = useState()
   const history = useHistory()
 
+  const token = localStorage.getItem("id");
+  
+  if (token) {
+    localStorage.removeItem('token')
+    localStorage.removeItem('name')
+    localStorage.removeItem('id')
+    localStorage.removeItem('role')
+  }
+  
+  
   async function handleLogin(e) {
       e.preventDefault()
       try {
@@ -44,10 +54,10 @@ const Login = () => {
           } else if (res.data.employee.role === 'admin') {
               history.push('/menu')
           } else {
-              alert('Authentication failure')
+              alert('Usuário ou senha incorreto')
           }
       } catch (err) {
-          alert('Authentication failure')
+          alert('Usuário ou senha incorreto')
       }
   }
 

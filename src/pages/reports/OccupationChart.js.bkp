@@ -1,0 +1,421 @@
+import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import Chart from 'react-apexcharts'
+import Api from "../../api/api";
+import { useMenu } from "../../context/MenuContext";
+
+const ReportDailyBilling = () => {
+  const {register, handleSubmit} = useForm();
+  const [list, setList] = useState();
+  const [cashierData, setcashierData] = useState();
+  const [cashierList, setcashierList] = useState();
+  const [employees, setEmployees] = useState();
+  const [chart, setChart] = useState("dailyBilling");
+  const [dataList, setDataList] = useState();
+  const { state, setState } = useMenu();
+
+  let valueBycashier = [0]
+  let cashierDate = ["0"]
+  
+
+  const renderPG = (state) => {
+    let type = {
+      OccupationChart: changeState(state),
+      dailyBilling: dailyBilling(),
+      NonPayment: nonPaymentList()
+    };
+    return type[state] || dailyBilling()
+  };
+  
+
+  const changeState = (state) => {
+    if (state === "dailyBilling") {
+      setState("dailyBilling")
+    } else if (state === "OccupationChart") {
+      setState("reports")
+    }
+  }
+
+
+  function dailyBilling() {
+    return (
+      <div>
+        <h4>Faturamento diário Por Usuário</h4>
+        <Chart options={dailyBillingChart().options} series={dailyBillingChart().series} type="bar" height={350} />
+
+        
+      </div>
+    )
+  }
+
+
+
+  // PRECISA ORGANIZAR OS VALORES DE ACORDO COM O MES PARA IMPRIMIR CERTO NO CHART
+  // function formatToChart() {
+  //   const usersData = separetesByDayAndUser()
+  //   let valueByUser = []
+  //   let calendarByUser = []
+
+  //   usersData.forEach(el => {
+  //     const haveUser = valueByUser.find(userEl => userEl.name === el.name)
+  //     if (valueByUser.length == 0 || haveUser == undefined) {
+  //       valueByUser.push({name: el.name, data: [el.cashierValue]})
+  //       calendarByUser.push({name: el.name, data: [el.calendar]})
+  //     } else {
+  //       const index = (valueByUser.findIndex(findEl => findEl.name == el.name))
+  //       const calendarIndex = (calendarByUser.findIndex(findEl => findEl.name == el.name))
+
+  //       valueByUser[index].data.push(el.cashierValue)
+  //       calendarByUser[calendarIndex].data.push(el.calendar)
+
+  //     }
+  //   })
+
+
+
+
+  //   return {valueByUser, calendarByUser}
+  // }
+
+  
+// const { valueByUser, calendarByUser } = formatToChart()
+
+
+const formatDataToChart = () => {
+  let valueBycashier = [];
+  let cashierDate = [];
+  console.log("DATALIST ", dataList)
+  if (dataList) {
+
+    dataList.forEach(elem => {
+      valueBycashier.push(elem.endingAmount);
+      cashierDate.push(formatDatetoChart(elem.startDate))
+    })
+    console.log("no returnC ", valueBycashier)
+    console.log("no return ", cashierDate)
+    setcashierList(valueBycashier)
+    setcashierData(cashierDate)
+    return { valueBycashier, cashierDate}
+  }
+}
+
+function formatDatetoChart(dateTime) {
+  const date = dateTime.split('T')
+  console.log("DATA 0 ", date[0])
+  return date[0]
+}
+
+// console.log("TESTE ", formatDataToChart())
+// console.log("TESTE1 ", cashierList)
+// console.log("TESTE 2 ", cashierData)
+
+// if (dataList) {
+//   formatDataToChart()
+// }
+
+// if (cashierList) {
+//   console.log("cashier list ", cashierList[0].data)
+//       }
+
+// if (dataList) {
+//  const  cashierValues = formatDataToChart()
+//   valueBycashier = cashierValues.valueBycashier
+//   cashierDate = cashierValues.cashierDate
+// }
+
+// console.log("DATALIST ", dataList)
+// console.log("VALUE ", valueBycashier)
+// console.log("VALUE 2", cashierDate)
+
+  const dailyBillingChart = () => {
+    // let serie =  formatDataToChart()
+    // let datas =  formatDataToChart()
+    // series: [{
+    //   name: 'Net Profit',
+    //   data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+    // }, {
+    //   name: 'Revenue',
+    //   data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
+    // }, {
+    //   name: 'Free Cash Flow',
+    //   data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
+    // }],
+     const data = {
+      series: [{
+      data: list? list.endingAmount : [0]
+    }],
+    options: {
+      chart: {
+        type: 'bar',
+        height: 350
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '55%',
+          endingShape: 'rounded'
+        },
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        show: true,
+        width: 2,
+        colors: ['transparent']
+      },
+      xaxis: {
+        categories: list? list.cashierDate : ["0"]
+        // categories: ['Jan', 'Fev', 'Mar', 'Abr', 'Jun', 'Jul', 'Ag', 'Set', 'Out', 'Nov', 'Dez'],
+      },
+      yaxis: {
+        title: {
+          text: '$ (thousands)'
+        }
+      },
+      fill: {
+        opacity: 1
+      },
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return "$ " + val 
+          }
+        }
+      }
+    },
+  } 
+
+  return data
+  
+  };
+
+  // function formatDateToMonthAndYear(date) {
+  //   if (date.length == 24) {
+  //   let formatedDate = date.split('T')[0].split("-")
+  //   formatedDate = formatedDate[0] + "-" + formatedDate[1]  
+  //   return formatedDate  
+  //   }
+  // }
+
+  // function separetesByDayAndUser() {
+  //   let data = []
+
+  //   if (dataList) {
+  //     dataList.forEach(el => {        
+  //       const elementDate = formatDateToMonthAndYear(el.startDate)
+  //       if (data.find(findEl => findEl.name == el.employeeId.name) &&
+  //       data.find(findEl => findEl.calendar == elementDate)
+  //        && el.countAmount != null) {
+  //         const index = (data.findIndex(findEl => findEl.name == el.employeeId.name))
+  //         data[index].cashierValue += el.countAmount
+  //       } else {          
+  //         data.push({name: el.employeeId.name, calendar: elementDate, cashierValue: el.countAmount})
+  //       }
+  //     })      
+  //   } 
+  //   return data
+  // }
+
+  // const usersData = separetesByDayAndUser()
+  // console.log("LISTAGEM ", usersData)
+
+  
+const getUserData = async (employeeId) => {
+  console.log("EMPLOY ID ", employeeId)
+  return await Api.get(`/cashier/getCashierFormattedByEmployeeId/${employeeId}`)
+
+}
+ 
+  function nonPaymentList() {
+    return (
+      <div className="col-sm-12 mt-4">
+        <table className="table">
+          <thead>
+            <tr>
+              <th className="col-sm-6">Cliente</th>
+              <th className="col-sm-4">Data</th>
+              <th className="col-sm-2">Valor</th>
+            </tr>
+          </thead>
+          {/* {makeList()} */}
+        </table>
+      </div>
+    )
+  }
+
+  const getList = async () => {
+    try {      
+      const employeesList = await Api.get("/employee");
+      console.log("EMPLOYEEE LIST ", employeesList.data)
+      // setEmployees(employeesList.data)      
+      let employeesData = []
+
+      employeesList.data.forEach(async (employee) => {
+        console.log("FOR EACH ID ", employee.id)
+        const userData = await getUserData(employee.id)
+        employeesData.push({id: employee.id, data: [userData.data]})
+
+      })      
+      console.log("EMPLOYEE DATA ", employeesData)
+      setList(employeesData)
+
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  
+
+
+  function converteData(DataDDMMYY) {
+    const convertedData = `${DataDDMMYY.split("-")[2]}-${DataDDMMYY.split("-")[1]}-${DataDDMMYY.split("-")[0]}`
+    const dataSplit = convertedData.split("-");
+    const novaData = new Date(parseInt(dataSplit[2], 10),
+                  parseInt(dataSplit[1], 10) - 1,
+                  parseInt(dataSplit[0], 10));
+    return novaData;
+}
+
+const getUserCashier = async (userId) => {
+  let userCashier
+  try {
+    userCashier = await Api.get(`/cashier/getAllCashierByEmployeeId/${userId}`)     
+  } catch (error) {
+    console.log("Error getting cashier by employee " + error.message)
+  }
+  return userCashier.data
+}
+
+  const formatDate = () => {
+    let dates = []
+    if (list) {
+      console.log("FORMATED DATE ", list.cashierDate)
+      list.cashierDate.forEach(element => {
+        dates.push(element.split("T")[0])
+      })
+      setcashierData(dates)
+      
+    }
+  }
+
+  const onSubmit = async (data, event) => {
+    
+    event.preventDefault();
+    let userData;
+    console.log("DADOS ", data)
+    try {
+      userData = await Api.get(`/cashier/getCashierFormattedByEmployeeId/${data.employeeId}`)
+      console.log("DADOS DA API ", userData )
+      setList(userData.data)
+
+    } catch (error) {
+      console.log("Error getting cashier formatted", error.message)
+    }
+
+    
+
+    // setDataList("")
+    // let userCashier = await getUserCashier(data.employeeId)
+
+    
+    // if (userCashier) {
+    //   let dataInicial = converteData(data.initialDate);
+    //   let dataFinal = converteData(data.endDate);
+    //   console.log("DATA Inicial ", dataInicial, "final ", dataFinal)
+    //   let objetosFiltrados = userCashier.filter(result => {
+    //      return converteData(result.startDate.split('T')[0]) >= dataInicial && converteData(result.startDate.split('T')[0]) <= dataFinal;
+    //   })
+    //   setDataList(objetosFiltrados)
+    //   userCashier = null
+    //   return objetosFiltrados
+    // }
+    
+  }
+
+console.log("LIST ", list)
+console.log("cashierData ", cashierData)
+  // if (list) {formatDate()}
+
+
+
+  useEffect(() => {
+    getList();    
+  }, []);
+
+
+  return (
+    <div className="container col-sm-12">
+      <div className="tollbar mt-1">
+        <h2>Relatórios</h2>
+      </div>
+      <div className="row">
+
+      <div className="buttons mt-5 col-sm-12">
+        <button 
+        className="button-form mr-2 rounded col-sm-3" 
+        type="submit" 
+        onClick={() => {renderPG("OccupationChart")}}>
+          Ocupação Diária
+        </button>        
+          <button 
+          className="button-form mr-2 rounded col-sm-3" 
+          type="submit"
+          onClick={() => {setChart("dailyBilling")}}
+          >
+            Faturamento Diário
+          </button>
+        <button 
+        className="button-form mr-2 rounded col-sm-3" 
+        type="submit"
+        onClick={() => {setChart("NonPayment")}}
+        >
+          Inadimplência
+        </button>        
+          </div>
+      </div>
+
+        <div className="mt-5 mb-5">
+          <h3>Filtros</h3>
+          <div>
+            <h2>Selecione o caixa</h2>
+            <form onSubmit={handleSubmit(onSubmit, window.event)}>
+            <select
+              className="col-sm-3 rounded border"
+              {...register("employeeId")}
+            >
+              <option value="">Selecione o Usuário</option>
+              {employees && employees.map(employee => 
+              <option key={employee.id} value={employee.id}>{employee.name}</option>
+            )}             
+            </select>
+            <br />
+          
+          
+          <label className="rounded"></label>
+          <input
+            id="date" 
+            type="date"
+            placeholder="Data Inicial"
+            className="rounded border"
+            {...register("initialDate")}
+            />
+          <label className=""></label>
+          <input
+            id="date" 
+            type="date"
+            placeholder="Data Final"
+            className="rounded border"
+            {...register("endDate")}
+            />
+          <input type="submit" value="Ok" />
+            </form>
+            </div>
+        </div>
+        
+        {renderPG(chart)}
+    </div>
+  );
+};
+
+export default ReportDailyBilling;

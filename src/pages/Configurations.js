@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import { useMenu } from "../context/MenuContext";
@@ -13,9 +13,48 @@ const Configurations = () => {
     watch,
     formState: { errors },
   } = useForm();
+  const [list, setList] = useState();
+  let carro, moto, camionete;
+
+
+  
+  const getList = async () => {
+    try {
+      const spotValue = await Api.get(`/spotValue`);
+
+      console.log("spotValue LIST ", spotValue.data);
+      setList(spotValue.data);
+    } catch (error) {
+      console.log("Client List Error", error);
+    }
+  };
+
+  console.log("LIST ", list)
+  
+  if (list) {
+    list.forEach(el => {
+      if (el.type === "moto") {
+        console.log("moto")
+        moto = el
+      } else if (el.type === "carro") {
+        console.log("carro")        
+        carro = el
+      } else if (el.type === "camionete") {
+        console.log("camionete")
+        camionete = el
+      }
+    })
+  }
+
+  console.log("MOTO ", moto)
+  console.log("CARRO ", carro)
+  console.log("camionete ", camionete? camionete.value : "nada")
+  useEffect(() => {
+    getList();
+  }, []);
 
   return (
-    <div className="container">
+    <div className="container col-sm-12">
       <div className="tollbar">
         <h2>Configurações</h2>
       </div>
@@ -48,12 +87,12 @@ const Configurations = () => {
         <div className="mr-5 row col-sm-12 mb-1">
         <label className="mr-2 col-sm-3">Motos: </label>
         <input
-          placeholder="Valor Hora"
+          placeholder={moto && (moto.value).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL', minimumFractionDigits: 2})}
           className="mr-3 rounded border col-sm-3"
           {...register("motorcycle")}
         />
         <input
-          placeholder="Valor Fração de Hora"
+          placeholder={moto && (moto.value/2).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL', minimumFractionDigits: 2})}
           className="mr-3 rounded border col-sm-3"
           {...register("motorcycle")}
         />
@@ -62,12 +101,12 @@ const Configurations = () => {
 
         <label className="mr-2 col-sm-3">Carros: </label>
         <input
-          placeholder="Valor Hora"
+          placeholder={carro && (carro.value).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL', minimumFractionDigits: 2})}
           className="mr-3 rounded border col-sm-3"
           {...register("cars")}
           />
         <input
-          placeholder="Valor Fração Hora"
+          placeholder={carro && (carro.value/2).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL', minimumFractionDigits: 2})}
           className="mr-3 rounded border col-sm-3"
           {...register("cars")}
           />
@@ -75,36 +114,55 @@ const Configurations = () => {
           <div className="mr-5 row col-sm-12 mb-1">
         <label className="mr-2 col-sm-3">Camionetes: </label>
         <input
-          placeholder="Valor Hora"
+          placeholder={camionete && (camionete.value).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL', minimumFractionDigits: 2})}
           className="mr-3 rounded border col-sm-3"
           {...register("trucks")}
           />
         <input
-          placeholder="Valor Fração Hora"
+          placeholder={camionete && (camionete.value/2).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL', minimumFractionDigits: 2})}
+          className="mr-3 rounded border col-sm-3"
+          {...register("trucks")}
+          />
+          </div>
+          <div className="row mb-1">
+        <h3 className="col-sm-7">Diária</h3>
+        <h3 className="mr-5">Pernoite</h3>
+        </div>
+          <div className="mr-5 row col-sm-12 mb-1">
+        <label className="mr-2 col-sm-3">Carros: </label>
+        <input
+          placeholder={carro && (carro.daily).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL', minimumFractionDigits: 2})}
+          className="mr-3 rounded border col-sm-3"
+          {...register("trucks")}
+          />
+        <input
+          placeholder={carro && (carro.overnightStay).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL', minimumFractionDigits: 2})}
           className="mr-3 rounded border col-sm-3"
           {...register("trucks")}
           />
           </div>
           <div className="mr-5 row col-sm-12 mb-1">
-        <label className="mr-2 col-sm-3">Diária Carros: </label>
+        <label className="mr-2 col-sm-3">Motos: </label>
         <input
-          placeholder="Valor Hora"
+          placeholder={moto && (moto.daily).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL', minimumFractionDigits: 2})}
+          className="mr-3 rounded border col-sm-3"
+          {...register("trucks")}
+          />
+        <input
+          placeholder={moto && (moto.overnightStay).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL', minimumFractionDigits: 2})}
           className="mr-3 rounded border col-sm-3"
           {...register("trucks")}
           />
           </div>
           <div className="mr-5 row col-sm-12 mb-1">
-        <label className="mr-2 col-sm-3">Diária Motos: </label>
+        <label className="mr-2 col-sm-3">Camionetes: </label>
         <input
-          placeholder="Valor Hora"
+          placeholder={camionete && camionete.daily && (camionete.daily).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL', minimumFractionDigits: 2})}
           className="mr-3 rounded border col-sm-3"
           {...register("trucks")}
           />
-          </div>
-          <div className="mr-5 row col-sm-12 mb-1">
-        <label className="mr-2 col-sm-3">Diária Camionetes: </label>
         <input
-          placeholder="Valor Hora"
+          placeholder={camionete && camionete.overnightStay && (camionete.overnightStay).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL', minimumFractionDigits: 2})}
           className="mr-3 rounded border col-sm-3"
           {...register("trucks")}
           />
@@ -118,7 +176,7 @@ const Configurations = () => {
 
         <label className="mr-2 col-sm-3">Quantidade de Box Disponível: </label>
         <input
-          placeholder="Quantidade de box col-sm-3"
+          placeholder="Quantidade de box"
           className="rounded border"
           {...register("boxQtd")}
           />
