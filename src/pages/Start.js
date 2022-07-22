@@ -173,7 +173,7 @@ const ListVehicles = () => {
         console.log("TOKEN ", token)
         await Api.put(`/parkingSpotHasVehicle/checkout/${id}/${userId}`);
       
-      window.location.reload()
+      // window.location.reload()
     
   }
 
