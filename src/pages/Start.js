@@ -169,11 +169,16 @@ const ListVehicles = () => {
   };
 
   const closure = async (id) => {
-    
+      try {
         console.log("TOKEN ", token)
         await Api.put(`/parkingSpotHasVehicle/checkout/${id}/${userId}`);
       
-      // window.location.reload()
+      window.location.reload()
+      } catch (error) {
+        window.alert("Abra o caixa para realizar essa operação")
+        console.error(error)
+      }
+
     
   }
 
